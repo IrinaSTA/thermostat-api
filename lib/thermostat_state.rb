@@ -1,4 +1,4 @@
-require 'databaseconnection'
+require_relative './database_connection'
 require 'pry'
 
 class ThermostatState
@@ -10,11 +10,13 @@ class ThermostatState
     @power_mode = power_mode
     @city = city
   end
-
+# updates record with hardcoded id of 1
   def self.save(temperature, power_mode, city)
-    state = DatabaseConnection.query("INSERT INTO state
-      (temperature, power_mode, city)
-      VALUES ('#{temperature}', '#{power_mode}', '#{city}')
+    state = DatabaseConnection.query("UPDATE state \
+      SET temperature = '#{temperature}', \
+          power_mode = '#{power_mode}', \
+          city = '#{city}' \
+      WHERE id = '1' \
       RETURNING temperature, power_mode, city;")
     ThermostatState.new(
       temperature: state[0]['temperature'],
@@ -23,12 +25,11 @@ class ThermostatState
   end
 
   def self.read
-    state = DatabaseConnection.query("SELECT * FROM state")
+    state = DatabaseConnection.query('SELECT * FROM state')
     ThermostatState.new(
       temperature: state[0]['temperature'],
       power_mode: state[0]['power_mode'],
       city: state[0]['city']
     )
   end
-
 end

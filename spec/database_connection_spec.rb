@@ -1,12 +1,14 @@
-require 'databaseconnection'
+require 'database_connection'
 
 describe DatabaseConnection do
+
   describe '.setup' do
     it 'sets up a connection to a database through PG' do
       expect(PG).to receive(:connect).with(dbname: 'thermostat')
       DatabaseConnection.setup
     end
   end
+
   describe '.query' do
     it 'executes a query via PG' do
       connection = DatabaseConnection.setup
@@ -14,5 +16,4 @@ describe DatabaseConnection do
       DatabaseConnection.query("SELECT * FROM state;")
     end
   end
-
 end
